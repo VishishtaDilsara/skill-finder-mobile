@@ -1,104 +1,157 @@
 import 'package:flutter/material.dart';
-import '../routes.dart';
+import '../routes.dart'; // adjust if needed
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Determine the safe area padding from the bottom (e.g., iPhone home indicator)
-    final double systemBottomPadding = MediaQuery.of(context).padding.bottom;
-
     return Scaffold(
-      // Set the background to black/very dark
-      backgroundColor: const Color(0xFF0D0D0D),
-
-      // body: Column allows the image to extend up to the top edge (behind the status bar).
-      body: Column(
-        children: [
-          // --- Image Section ---
-          // Set to 50% of screen height to leave room for the text and button.
-          Container(
-            height: MediaQuery.of(context).size.height * 0.50,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                // Using the local image asset: 'assets/images/welcome.jpg'
-                image: AssetImage('assets/images/welcome.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-
-          // --- Text Content Section ---
-          Expanded(
-            // Use SafeArea here, but set top: false since the image already covers the top.
-            child: SafeArea(
-              top: false,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 32.0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    // Title: Large, bold, white
-                    Text(
-                      'Find skilled professionals\nfor your home projects',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        height: 1.2, // Tighter line spacing
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // --- Main Section ---
+            Column(
+              children: [
+                // Background image
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  height: 260,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: const DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDPBgbfVt7coMQTKCxtSQadI6pYY9GcGQUxJSOiuOXGaEYfKNVoMsvvrrWPmD5SOAMVbzkyZuoPw-oFnP1rbIclnvbMPq7eTygF1yz6jY6qkaas_p_mR7xyrMHfrvM0MaY6EuyZN2yVhJ38r3Hg0_g8YQLDoZIouhHoGbNjdA2GvWQByIEC5zzqlgCqYeZYWUgGtqmViQaoQFfUgMv7ElVfuhCh-qAaVpemrAqDPgbCZlkCulKNgY_EGQ-LtxClNwYWQabHqN21CXtG",
                       ),
                     ),
-                    SizedBox(height: 16),
-                    // Description: Smaller, slightly muted white
-                    Text(
-                      'Connect with trusted contractors, plumbers, electricians, and more. Get quotes, schedule appointments, and manage your projects all in one place.',
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
+                  ),
+                ),
+
+                // Title
+                const Padding(
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    top: 20,
+                    bottom: 8,
+                  ),
+                  child: Text(
+                    "Find and hire local service providers",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF111818),
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Manrope',
+                      height: 1.2,
                     ),
-                  ],
+                  ),
+                ),
+
+                // Subtitle
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    "Connect with skilled professionals for all your home service needs.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF111818),
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Noto Sans',
+                      height: 1.5,
+                    ),
+                  ),
+                ),
+
+                // Buttons
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 20,
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, AppRoutes.signup);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF13ECEC),
+                            foregroundColor: const Color(0xFF111818),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            "Sign up",
+                            style: TextStyle(
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, AppRoutes.login);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFF0F4F4),
+                            foregroundColor: const Color(0xFF111818),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            "Log in",
+                            style: TextStyle(
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            // Footer Text
+            const Padding(
+              padding: EdgeInsets.only(bottom: 20, left: 16, right: 16),
+              child: Text(
+                "By continuing, you agree to our Terms of Service and Privacy Policy.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF618989),
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  fontFamily: 'Noto Sans',
+                  height: 1.4,
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-
-      // --- Sticky Button Section (bottomNavigationBar) ---
-      bottomNavigationBar: Padding(
-        // Dynamically add the systemBottomPadding to ensure the button is never obscured.
-        padding: EdgeInsets.fromLTRB(
-          24.0,
-          16.0,
-          24.0,
-          40.0 +
-              systemBottomPadding, // Base 40px margin + system safe area padding
-        ),
-        child: SizedBox(
-          height: 60,
-          child: ElevatedButton(
-            // Use the original navigation logic
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.login),
-            style: ElevatedButton.styleFrom(
-              // Use a vibrant blue color for the button
-              backgroundColor: const Color(0xFF00BFFF),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 0,
-            ),
-            child: const Text(
-              'Get Started',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          ],
         ),
       ),
     );

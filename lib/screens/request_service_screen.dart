@@ -1,397 +1,248 @@
 import 'package:flutter/material.dart';
+import '../routes.dart';
+import '../widgets/bottom_navbar.dart';
 
-class RequestServiceScreen extends StatefulWidget {
+class RequestServiceScreen extends StatelessWidget {
   const RequestServiceScreen({super.key});
 
-  @override
-  State<RequestServiceScreen> createState() => _RequestServiceScreenState();
-}
-
-class _RequestServiceScreenState extends State<RequestServiceScreen> {
-  // State variables for the form
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
-  String _description = '';
-  final _descriptionController = TextEditingController();
-
-  // Highlighted index for the bottom navigation bar (Bookings is index 2)
-  int _currentIndex = 2;
-
-  // Color Constants (based on HTML/Tailwind)
-  static const Color darkBackground = Color(0xFF111618);
-  static const Color inputBackground = Color(0xFF283339);
-  static const Color inactiveText = Color(0xFF9DB0B9);
-  static const Color primaryBlue = Color(0xFF13A4EC);
-  static const Color navBarColor = Color(0xFF1C2327);
-  static const Color navBarBorder = Color(0xFF283339);
-
-  @override
-  void initState() {
-    super.initState();
-    _descriptionController.addListener(() {
-      _description = _descriptionController.text;
-    });
-  }
-
-  @override
-  void dispose() {
-    _descriptionController.dispose();
-    super.dispose();
-  }
-
-  // --- Date and Time Pickers ---
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 5),
-      builder: (context, child) {
-        // Apply custom theme to the picker
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: primaryBlue,
-              onPrimary: Colors.white,
-              surface: inputBackground,
-              onSurface: Colors.white,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(foregroundColor: primaryBlue),
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime ?? TimeOfDay.now(),
-      builder: (context, child) {
-        // Apply custom theme to the picker
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: primaryBlue,
-              onPrimary: Colors.white,
-              surface: inputBackground,
-              onSurface: Colors.white,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(foregroundColor: primaryBlue),
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null && picked != _selectedTime) {
-      setState(() {
-        _selectedTime = picked;
-      });
-    }
-  }
-
-  void _submitRequest() {
-    if (_selectedDate == null ||
-        _selectedTime == null ||
-        _description.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Please select a date, time, and describe your service needs.',
-          ),
-          backgroundColor: Colors.redAccent,
+  // Helper method to create a title for sections
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: 16.0, right: 16.0, top: 16.0, bottom: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xFF111818),
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          letterSpacing: -0.015,
         ),
-      );
-      return;
-    }
-
-    // Placeholder for Firestore save logic
-    print('Service Requested:');
-    print('Date: $_selectedDate');
-    print('Time: $_selectedTime');
-    print('Description: $_description');
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Service request submitted successfully!'),
-        backgroundColor: primaryBlue,
       ),
     );
   }
 
-  // --- UI Components ---
-
-  Widget _buildFormField({
-    required String hintText,
-    required VoidCallback onTap,
-    required Widget icon,
-    String? displayValue,
-  }) {
-    return Expanded(
-      child: TextFormField(
-        readOnly: true,
-        onTap: onTap,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: const TextStyle(color: inactiveText),
-          filled: true,
-          fillColor: inputBackground,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 0,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide.none,
-          ),
-          suffixIcon: icon,
-        ),
-        style: const TextStyle(color: Colors.white, fontSize: 16),
-        controller: TextEditingController(text: displayValue),
-      ),
-    );
-  }
-
-  Widget _buildBottomNavBar(BuildContext context) {
-    const Color inactiveColor = inactiveText;
-    const Color activeColor = Colors.white;
-
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: navBarBorder, width: 1.0)),
-        color: navBarColor,
-      ),
-      padding: EdgeInsets.only(
-        top: 8.0,
-        bottom: 8.0 + MediaQuery.of(context).padding.bottom,
-      ),
+  // Helper method to create a list tile for summary details
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildNavItem(
-            context,
-            Icons.home_outlined,
-            Icons.home,
-            'Home',
-            0,
-            inactiveColor,
-            activeColor,
+          Text(
+            label,
+            style: const TextStyle(
+              color: Color(0xFF618989),
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
+            ),
           ),
-          _buildNavItem(
-            context,
-            Icons.list_outlined,
-            Icons.list,
-            'Categories',
-            1,
-            inactiveColor,
-            activeColor,
-          ),
-          _buildNavItem(
-            context,
-            Icons.calendar_today_outlined,
-            Icons.calendar_today,
-            'Bookings',
-            2,
-            inactiveColor,
-            activeColor,
-          ),
-          _buildNavItem(
-            context,
-            Icons.person_outline,
-            Icons.person,
-            'Profile',
-            3,
-            inactiveColor,
-            activeColor,
+          Text(
+            value,
+            style: const TextStyle(
+              color: Color(0xFF111818),
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNavItem(
-    BuildContext context,
-    IconData icon,
-    IconData activeIcon,
-    String label,
-    int index,
-    Color inactiveColor,
-    Color activeColor,
-  ) {
-    final bool isActive = _currentIndex == index;
-    final Color color = isActive ? activeColor : inactiveColor;
-
-    return Expanded(
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(isActive ? activeIcon : icon, color: color, size: 24),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    String dateDisplay = _selectedDate == null
-        ? null.toString()
-        : '${_selectedDate!.month}/${_selectedDate!.day}/${_selectedDate!.year}';
-
-    String timeDisplay = _selectedTime == null
-        ? null.toString()
-        : _selectedTime!.format(context);
-
     return Scaffold(
-      backgroundColor: darkBackground,
-      appBar: AppBar(
-        backgroundColor: darkBackground,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Request Service',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Text(
-                'When do you need the service?',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+      backgroundColor: Colors.white,
+
+      // The body contains the header, scrollable content, and the fixed button.
+      // The fixed button must be inside the body Column, but outside the Expanded/Scrollable area.
+      body: Column(
+        children: [
+          // Custom AppBar matching the design
+          PreferredSize(
+            preferredSize: const Size.fromHeight(60.0),
+            child: Container(
+              color: Colors.white,
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+              child: SafeArea(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () =>
+                          Navigator.pop(context), // Handle back navigation
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.arrow_back,
+                            color: Color(0xFF111818), size: 24),
+                      ),
+                    ),
+                    const Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            right: 48.0), // Offset for back button
+                        child: Text(
+                          'Confirm booking',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color(0xFF111818),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -0.015,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 12.0,
-              ),
-              child: Row(
+          ),
+
+          // Main Scrollable Content
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildFormField(
-                    hintText: 'Select Date',
-                    onTap: () => _selectDate(context),
-                    icon: Icon(Icons.calendar_today, color: inactiveText),
-                    displayValue: dateDisplay == 'null' ? null : dateDisplay,
+                  // --- Service Section ---
+                  _buildSectionTitle('Service'),
+                  ListTile(
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    leading: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF0F4F4),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child:
+                          const Icon(Icons.ac_unit, color: Color(0xFF111818)),
+                    ),
+                    title: const Text(
+                      'Ceiling Fan Installation',
+                      style: TextStyle(
+                          color: Color(0xFF111818),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: const Text(
+                      'Install a new ceiling fan',
+                      style: TextStyle(color: Color(0xFF618989), fontSize: 14),
+                      maxLines: 2,
+                    ),
                   ),
-                  const SizedBox(width: 16),
-                  _buildFormField(
-                    hintText: 'Select Time',
-                    onTap: () => _selectTime(context),
-                    icon: Icon(Icons.access_time, color: inactiveText),
-                    displayValue: timeDisplay == 'null' ? null : timeDisplay,
+
+                  // --- Provider Section ---
+                  _buildSectionTitle('Provider'),
+                  ListTile(
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    leading: const CircleAvatar(
+                      radius: 28,
+                      backgroundImage: NetworkImage(
+                          'https://lh3.googleusercontent.com/aida-public/AB6AXuD2hJ42DPAuBDpHWz7LymOIKdMfqyV4g243OgIWWYQB-bo2P3kH5I7rLb0f2unKveuSbMYbGQFBKTej4BeMWQRnPjptMJXnKZwm646N62m6Nwf9_W5FWqSvCz4KRpRAu3g-gr_1N-xZm3rTdJg2qPe3URANVTDHdq4ZJ3HJ3H7cSQDl6ViqWj8JsH-IwcFQVP1konbWmUmyU29JIxmWGLNE2ZH6B7hNF2G-Hxh1STh-kNs5QwmJeFOFB_IbbxOzgZuBBsJEE5tl32za'),
+                    ),
+                    title: const Text(
+                      'Ethan Carter',
+                      style: TextStyle(
+                          color: Color(0xFF111818),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: const Text(
+                      '4.9 (123 reviews)',
+                      style: TextStyle(color: Color(0xFF618989), fontSize: 14),
+                      maxLines: 2,
+                    ),
                   ),
+
+                  // --- Date & Time Section ---
+                  _buildSectionTitle('Date & Time'),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      'Tue, Jul 23 · 10:00 AM - 11:00 AM',
+                      style: TextStyle(
+                          color: Color(0xFF111818),
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+
+                  // --- Summary Section ---
+                  _buildSectionTitle('Summary'),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        _buildDetailRow('Service', 'Ceiling Fan Installation'),
+                        _buildDetailRow('Subtotal', '\$120'),
+                        _buildDetailRow('Taxes', '\$12'),
+                        _buildDetailRow('Total', '\$132'),
+                      ],
+                    ),
+                  ),
+                  // Add extra padding to ensure content doesn't get hidden behind the button bar
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
-              child: Text(
-                'What do you need help with?',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 12.0,
-              ),
-              child: TextFormField(
-                controller: _descriptionController,
-                maxLines: 6,
-                minLines: 4,
-                decoration: InputDecoration(
-                  hintText: 'Describe your project',
-                  hintStyle: const TextStyle(color: inactiveText),
-                  filled: true,
-                  fillColor: inputBackground,
-                  contentPadding: const EdgeInsets.all(16.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 16.0,
-              ),
-              child: ElevatedButton(
-                onPressed: _submitRequest,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryBlue,
-                  minimumSize: const Size(double.infinity, 48),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'Request Service',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.2,
+          ),
+
+          // Fixed Bottom Button (outside the scroll area)
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 12.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.bookings);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF13ECEC),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Confirm Booking',
+                      style: TextStyle(
+                        color: Color(0xFF111818),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.015,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
+              // Separator line for aesthetic purposes (matches the old nav bar style)
+              const Divider(height: 1, thickness: 1, color: Color(0xFFF0F4F4)),
+            ],
+          ),
+        ],
       ),
-      bottomNavigationBar: _buildBottomNavBar(context),
+
+      // Use the imported BottomNavbar widget here, passing the required parameters.
+      // Assuming 'Bookings' is index 1 (Categories=0, Bookings=1, Profile=2)
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: 1, // Set the 'Bookings' tab as active
+        context: context, // Pass the required BuildContext
+      ),
     );
   }
 }

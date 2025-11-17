@@ -1,324 +1,210 @@
 import 'package:flutter/material.dart';
-import '../routes.dart'; // Assuming this file exists for navigation
+import '../widgets/bottom_navbar.dart';
+import '../routes.dart'; // ✅ Import AppRoutes
 
 class ProviderListScreen extends StatelessWidget {
-  const ProviderListScreen({super.key});
-
-  static const Color kBackground = Color(0xFF111618);
-  static const Color kHeaderBackground = Color(0xFF111618);
-  static const Color kButtonBackground = Color(0xFF283339);
-  static const Color kBottomNavBarBackground = Color(0xFF1C2327);
-  static const Color kInactiveIconColor = Color(0xFF9DB0B9);
-  static const Color kDescriptionColor = Color(0xFF9DB0B9);
-  static const Color kWhite = Colors.white;
-
-  // Mock data for the provider list
-  final List<Map<String, dynamic>> providers = const [
-    {
-      'name': 'Ethan Carter',
-      'service': 'Plumbing',
-      'rating': 4.8,
-      'imageUrl':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuCcGU-FOglWCP9Ny_zYZYLzlJev_gZWbocc-bP-ZR-_RD4Fr52yVZkM9JB_iiABW4dsi_FvBK5KVZVz9QmME_y1zcR5Z3gP3mkdY-mrM90Cw2z5VqQz2SVC60a2a0s7AM34vEH2-1PF8GYRJ1WowLNDQbo3FTGPWZXhvhOX_pJhCLvaPmMsrGkzkFgfsTTsVPCHR4aVGwraYJw3mu7395M2F85f23H8rE30UypYUaGrcYZiK1bO0PV3itPiom9osY-mNRd0NM7tVuc',
-    },
-    {
-      'name': 'Liam Harper',
-      'service': 'Plumbing',
-      'rating': 4.9,
-      'imageUrl':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuAbosEsQUT6sHi1ilVEAVYQF0vnUO8vegwAhfiDiTc7J55D2gZn-jmQReY5mg-5w6fqxz_KIj-7sw-3kitacquLUzm_JDhaCQVopGLGKj75gQn2YF7W_jv00NUiIyzVTM0C7muva4zQrsYIUJAnbUjN-cns7iy1PF2WGcy1YYKyL4jrTd2BiBFoQBaXuA9foqh1E5lWedHA2LDqDpMZW5bm9Z7AGjsGF4LHGbI22eh-SuEVzMernKrhjoosGcxJAbUqwCzlubA_Zvg',
-    },
-    {
-      'name': 'Noah Bennett',
-      'service': 'Plumbing',
-      'rating': 4.7,
-      'imageUrl':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuAdrRqVmIyXadqMSn5kIay2-ZD13Xeav1Etj9ywy_gcgR7hUlecVC7IEJBdnRqrcOHK6Z41RDPTD6O0yTBFJ19AZ5lxH-GtwVUGOIVYxlSl42KTP2FmdWOYWRQ-B0XjA0MhRB635u0w7_Ka64VIYR0MkKrepBPp8WkoPQXcKq1-StTmnOTuTapeQqCoxELT3dvCicilBa5vaPV1d18l4tNAdJUF34Dc83-17RKVtBR2q0-dIEA3MFQu3bN81m1kFJhQl7Wk8zpMWJ4',
-    },
-    {
-      'name': 'Oliver Reed',
-      'service': 'Plumbing',
-      'rating': 4.6,
-      'imageUrl':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuAA2iQDZZvXpH98_Nx-BlNv68dlgTQ5tSBRlQpv93ABYyebTNNsxLas0tuprrCrzQUlRAwR6eiX6OMLf7-t3iQ4P3jsaJB_Mu0vFmVExrdKz1Oi00zD1JKbOgZkdJGVMhCrZ0njCVE-oMcOpj4RTnjSVOR0f8GGlnfOOV1HPJWJhaMdVM01F_eTq7UkUvstWIP9O7TqiYlUKMhJ-tJyKll13Z7An4Jg7LdtD7GvEDZudZydeOK4kJoE9olBemo5VkfXewia1RmfIt4',
-    },
-    // Add more providers here if needed
-  ];
+  final String categoryName;
+  const ProviderListScreen({super.key, required this.categoryName});
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> providers = [
+      {
+        'name': 'Ethan Harper',
+        'desc': 'Expert in custom furniture and installations',
+        'rating': '4.8',
+        'image':
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuAGRLF1K8Hi4xg_LmdM5O9CVY6gbs0fU_AYU0qmmOvgnUsa1g7SdcW7FykDNX2lqy51oGjyrLJy3DWBhjD0jAHU0dzMZbHJAbN49Ez4RbscbE1S-WZg_KO7aaOXSHzJt4IGgn-utmTr98mPKqzZWikQpdAv_iK28fD-CX3IxoUEHCYmyCGbi--qqN6AM7R3-Zj5YW8iqpLwGwuB2sHRDEUsoho7ZWyRBPQT3Gfx57sPxMh6c--RxyO9COUkJEoARlhv-n8hS62OCywU',
+      },
+      {
+        'name': 'Olivia Bennett',
+        'desc': 'Specializes in home repairs and renovations',
+        'rating': '4.7',
+        'image':
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuBQIfuD0vFnV4kNUBiv9NAS6vVyAI9JFlBDfxDYhK29euwOH4cZPHuWi6qwnRZk91MFuNzmmsOPBmi9Ob9wKTk6yjHQVXz01Kh4Ti3P9Q_ggZOuY5RBtGCiExgHXLyAP46J_X9NQomKNKGOy7-mZ_YmcSFdTfGHil6NueEageUYS4IuU_aOe9GlBxArp_0nNl-8GBDvyruyfZeORp2Xbdxa0-zm6JeZ2fu3_KINIlYDLscY9pBxRzqWwAlDZMHpgw2Sm1IXeniHZ3WY',
+      },
+      {
+        'name': 'Noah Carter',
+        'desc': 'Skilled in detailed woodworking and finishing',
+        'rating': '4.6',
+        'image':
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuBQMDigPtHScjGHYC3ebjfUrqlK07xmh6vsp8AX1iXTCeqTsW2jHSwcE7NAcyI7nahWv-oKYou6DElRk4Z5R4V-ZeY2g6vRWjs7v2WIVNScJ6KkbWwtmukBkch1m6pTR2UnLtgXbifC9GqQ3X5tRYhwnnXaoj97p9_vgxQ9PdQGnRPF3g3Q9966PRMP799KRZ-nAlPSXYH1eGHAaaaLfeMsLw9C3ZUViy-2LWgq9RMMllZRy9_AL_wfey1w4T2PVF-igSslnnaNri8e',
+      },
+      {
+        'name': 'Sophia Evans',
+        'desc': 'Offers comprehensive carpentry services',
+        'rating': '4.5',
+        'image':
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuDc1tjv06uJUbsgpZ2DtKwpRgEPxEaZTmzAB2YKGYo2scQzaHls9-nUWhaIpR4O5SvNgOGLVKvhTIUVsemIVo8qTirefOISXP4-DJ6tZNGbnVEuIMPSBjQLft7_i9vB-63a8fihv1uHSHRSiiMOrMnKe_z7PO1_H_d3KP2RenmoCRcrQimhOnzOAURYIyfKGR2-nMKoUqV2Ul0RXmwI5bBLy6-u93C0tS1EjJ3pt6XfO9lU97fwHCGRamz6Hqk7IqlaWO95Qwp2nsaL',
+      },
+    ];
+
     return Scaffold(
-      backgroundColor: kBackground,
-      // The overall structure is a Column in the body to hold the content and the BottomNavigationBar
+      backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Header and Filter Buttons
-          _buildHeader(),
-          _buildFilterBar(),
+          // --- AppBar ---
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Color(0xFF111818),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  Expanded(
+                    child: Text(
+                      categoryName,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Color(0xFF111818),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.015,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 40),
+                ],
+              ),
+            ),
+          ),
 
-          // Provider List using ListView.builder
+          // --- Search Bar ---
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search for services',
+                hintStyle: const TextStyle(color: Color(0xFF618989)),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: Color(0xFF618989),
+                  size: 24,
+                ),
+                filled: true,
+                fillColor: const Color(0xFFF0F4F4),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 14,
+                  horizontal: 8,
+                ),
+              ),
+            ),
+          ),
+
+          // --- Dynamic Title ---
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Top $categoryName",
+                style: const TextStyle(
+                  color: Color(0xFF111818),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.015,
+                ),
+              ),
+            ),
+          ),
+
+          // --- Providers List ---
           Expanded(
             child: ListView.builder(
               itemCount: providers.length,
               itemBuilder: (context, index) {
                 final provider = providers[index];
-                return ProviderListItem(
-                  name: provider['name']!,
-                  service: provider['service']!,
-                  rating: provider['rating']!,
-                  imageUrl: provider['imageUrl']!,
-                  onTap: () =>
-                      Navigator.pushNamed(context, AppRoutes.providerProfile),
+                return InkWell(
+                  onTap: () {
+                    // ✅ Use route navigation
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.providerProfile,
+                      arguments: {
+                        'name': provider['name'],
+                        'desc': provider['desc'],
+                        'rating': provider['rating'],
+                        'image': provider['image'],
+                      },
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                        bottom: BorderSide(color: Color(0xFFF0F4F4)),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 28,
+                              backgroundImage: NetworkImage(provider['image']),
+                            ),
+                            const SizedBox(width: 12),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  provider['name'],
+                                  style: const TextStyle(
+                                    color: Color(0xFF111818),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                SizedBox(
+                                  width: 220,
+                                  child: Text(
+                                    provider['desc'],
+                                    style: const TextStyle(
+                                      color: Color(0xFF618989),
+                                      fontSize: 13,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Text(
+                          provider['rating'],
+                          style: const TextStyle(
+                            color: Color(0xFF111818),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               },
             ),
           ),
 
-          // Bottom Navigation Bar
-          _buildBottomNavBar(context),
+          // --- Bottom NavBar ---
+          BottomNavBar(currentIndex: 0, context: context),
         ],
-      ),
-    );
-  }
-
-  // --- Widgets for UI Components ---
-
-  Widget _buildHeader() {
-    return Container(
-      color: kHeaderBackground,
-      padding: const EdgeInsets.fromLTRB(
-        16,
-        40,
-        16,
-        8,
-      ), // Adjusted top padding for status bar area
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Back Arrow Icon
-          _buildIcon(
-            Icons.arrow_back,
-            onTap: () {
-              /* Handle back action */
-            },
-          ),
-          // Title
-          const Expanded(
-            child: Text(
-              'Plumbers',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: kWhite,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          // Placeholder to balance title
-          const SizedBox(width: 48), // Size of the back icon + padding
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterBar() {
-    return Container(
-      color: kHeaderBackground,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      height: 52, // Approximate height for the bar
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          _buildFilterButton('Sort', Icons.keyboard_arrow_down_rounded),
-          const SizedBox(width: 12),
-          _buildFilterButton('Price', Icons.keyboard_arrow_down_rounded),
-          const SizedBox(width: 12),
-          _buildFilterButton('Rating', Icons.keyboard_arrow_down_rounded),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterButton(String text, IconData icon) {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: kButtonBackground,
-        foregroundColor: kWhite,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        padding: const EdgeInsets.only(left: 16, right: 8),
-        minimumSize: const Size(0, 32), // Constrain height
-        elevation: 0,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            text,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(width: 4),
-          Icon(icon, size: 20, color: kWhite),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNavBar(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          height: 1,
-          color: kButtonBackground, // Mimics the border
-        ),
-        Container(
-          color: kBottomNavBarBackground,
-          padding: const EdgeInsets.only(top: 8, bottom: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavBarItem(Icons.home_outlined, 'Home', isSelected: false),
-              _buildNavBarItem(Icons.list_alt, 'Categories', isSelected: true),
-              _buildNavBarItem(
-                Icons.calendar_month_outlined,
-                'Bookings',
-                isSelected: false,
-              ),
-              _buildNavBarItem(
-                Icons.person_outline,
-                'Profile',
-                isSelected: false,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNavBarItem(
-    IconData icon,
-    String label, {
-    required bool isSelected,
-  }) {
-    final color = isSelected ? kWhite : kInactiveIconColor;
-
-    return InkWell(
-      onTap: () {
-        /* Handle navigation */
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 24, color: color),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildIcon(IconData icon, {VoidCallback? onTap}) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        child: Icon(icon, color: kWhite, size: 24),
-      ),
-    );
-  }
-}
-
-// --- Custom Widget for List Item ---
-
-class ProviderListItem extends StatelessWidget {
-  final String name;
-  final String service;
-  final double rating;
-  final String imageUrl;
-  final VoidCallback onTap;
-
-  const ProviderListItem({
-    super.key,
-    required this.name,
-    required this.service,
-    required this.rating,
-    required this.imageUrl,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        color: ProviderListScreen.kBackground,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        constraints: const BoxConstraints(minHeight: 72),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                // Profile Image
-                Container(
-                  width: 56, // h-14
-                  height: 56, // h-14
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                // Name and Service
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        color: ProviderListScreen.kWhite,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      service,
-                      style: const TextStyle(
-                        color: ProviderListScreen.kDescriptionColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            // Rating
-            Text(
-              rating.toStringAsFixed(1),
-              style: const TextStyle(
-                color: ProviderListScreen.kWhite,
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

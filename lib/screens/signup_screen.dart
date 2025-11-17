@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-// import '../routes.dart'; // Assuming AppRoutes is defined here
+// Import your AppRoutes class from the routes.dart file
+import '../routes.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -9,20 +10,18 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  // Color Constants (based on HTML/Tailwind)
-  static const Color darkBackground = Color(0xFF111618);
-  static const Color inputBackground = Color(0xFF283339);
-  static const Color primaryBlue = Color(0xFF13A4EC);
-  static const Color inactiveText = Color(0xFF9DB0B9);
-  static const Color white = Colors.white;
+  // Colors
+  static const Color backgroundColor = Colors.white;
+  static const Color inputBackground = Color(0xFFF0F4F4);
+  static const Color primaryCyan = Color(0xFF13ECEC);
+  static const Color textColor = Color(0xFF111818);
+  static const Color mutedText = Color(0xFF618989);
 
-  // Text Controllers
-  final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // Controllers
+  final _fullNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
@@ -33,70 +32,78 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  // Generic Sign Up function
-  void _signUp() {
-    if (_formKey.currentState!.validate()) {
-      // Logic for signing up (e.g., using Firebase Auth)
-      print('Attempting sign up with:');
-      print('Name: ${_fullNameController.text}');
-      print('Email: ${_emailController.text}');
+  // --- Navigation and Logic ---
 
-      // Show confirmation message instead of alert()
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Welcome, ${_fullNameController.text}! Sign Up Successful.',
-          ),
-          backgroundColor: primaryBlue,
-        ),
-      );
-
-      // In a real app, you'd navigate here
-      // Navigator.pushNamed(context, AppRoutes.home);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please correct the errors in the form.'),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-    }
+  void _navigateToCategories() {
+    // Navigate to Categories and prevent going back to Signup
+    Navigator.of(context).pushReplacementNamed(AppRoutes.categories);
   }
 
-  // Custom Input Field Widget
+  // FIX: Updated to push TO the Login screen using named routes, as requested.
+  void _navigateToLogin() {
+    // Navigates explicitly TO the Login screen by pushing it onto the stack.
+    Navigator.of(context).pushNamed(AppRoutes.login);
+  }
+
+  void _handleSignUp() {
+    // Check if fields are empty
+    if (_fullNameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _confirmPasswordController.text.isEmpty) {
+      _showSnackBar('Please fill in all fields.');
+      return;
+    }
+
+    // Check if passwords match
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showSnackBar('Passwords do not match.');
+      return;
+    }
+
+    // SUCCESS: Perform sign up logic (omitted) and navigate
+    debugPrint('Sign Up successful for ${_emailController.text}');
+    _navigateToCategories();
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  // --- Widget Builders ---
+
   Widget _buildInput({
     required String hintText,
-    bool isPassword = false,
+    bool obscureText = false,
     required TextEditingController controller,
-    String? Function(String?)? validator,
+    TextInputType keyboardType = TextInputType.text,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-      child: TextFormField(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+      child: TextField(
         controller: controller,
-        obscureText: isPassword,
-        keyboardType: isPassword
-            ? TextInputType.text
-            : TextInputType.emailAddress,
-        validator: validator,
+        obscureText: obscureText,
+        keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(color: inactiveText),
+          hintStyle: const TextStyle(color: mutedText),
           filled: true,
           fillColor: inputBackground,
-          contentPadding: const EdgeInsets.all(16.0),
-          // Matches the h-14 height of the HTML input
-          constraints: const BoxConstraints(minHeight: 56),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide.none,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 18,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
           ),
         ),
-        style: const TextStyle(color: white, fontSize: 16),
+        style: const TextStyle(color: textColor, fontSize: 16),
       ),
     );
   }
@@ -104,195 +111,107 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: darkBackground,
-      appBar: AppBar(
-        backgroundColor: darkBackground,
-        elevation: 0,
-        automaticallyImplyLeading: false, // Prevents automatic back button
-        title: const Text(
-          'Sign Up',
-          style: TextStyle(
-            color: white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+      backgroundColor: backgroundColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
+          child: AppBar(
+            backgroundColor: backgroundColor,
+            elevation: 0,
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+            leading: IconButton(
+              // Back button leads back to the previous screen (likely LoginScreen)
+              icon: const Icon(
+                Icons.arrow_back_ios_new,
+                color: textColor,
+                size: 24,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: const Text(
+              "Sign Up",
+              style: TextStyle(
+                color: textColor,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
-        centerTitle: true,
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // --- Form Fields ---
-              _buildInput(
-                hintText: 'Full Name',
-                controller: _fullNameController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your full name.';
-                  }
-                  return null;
-                },
-              ),
-              _buildInput(
-                hintText: 'Email',
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _buildInput(hintText: "Full Name", controller: _fullNameController),
+            _buildInput(
+                hintText: "Email",
                 controller: _emailController,
-                validator: (value) {
-                  if (value == null || value.isEmpty || !value.contains('@')) {
-                    return 'Please enter a valid email.';
-                  }
-                  return null;
-                },
-              ),
-              _buildInput(
-                hintText: 'Password',
-                isPassword: true,
-                controller: _passwordController,
-                validator: (value) {
-                  if (value == null || value.length < 6) {
-                    return 'Password must be at least 6 characters.';
-                  }
-                  return null;
-                },
-              ),
-              _buildInput(
-                hintText: 'Confirm Password',
-                isPassword: true,
-                controller: _confirmPasswordController,
-                validator: (value) {
-                  if (value != _passwordController.text) {
-                    return 'Passwords do not match.';
-                  }
-                  return null;
-                },
-              ),
+                keyboardType: TextInputType.emailAddress),
+            _buildInput(
+              hintText: "Password",
+              controller: _passwordController,
+              obscureText: true,
+            ),
+            _buildInput(
+              hintText: "Confirm Password",
+              controller: _confirmPasswordController,
+              obscureText: true,
+            ),
 
-              // --- Sign Up Button ---
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+            // --- Sign Up Button ---
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: SizedBox(
+                width: double.infinity,
+                height: 56,
                 child: ElevatedButton(
-                  onPressed: _signUp,
+                  onPressed:
+                      _handleSignUp, // Handles validation and navigation to categories
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryBlue,
-                    minimumSize: const Size(
-                      double.infinity,
-                      56,
-                    ), // h-14 equivalent
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+                    backgroundColor: primaryCyan,
                     elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   child: const Text(
-                    'Sign Up',
+                    "Sign Up",
                     style: TextStyle(
-                      color: white,
-                      fontSize: 16,
+                      color: textColor,
                       fontWeight: FontWeight.bold,
+                      fontSize: 16,
                       letterSpacing: 0.2,
                     ),
                   ),
                 ),
               ),
+            ),
 
-              // --- Separator Text ---
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                child: Text(
-                  'Or sign up with',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: inactiveText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                  ),
+            const SizedBox(height: 12),
+
+            // --- Already have an account ---
+            const Text(
+              "Already have an account?",
+              style: TextStyle(color: mutedText, fontSize: 14),
+            ),
+            const SizedBox(height: 6),
+            GestureDetector(
+              onTap: _navigateToLogin, // Now pushes TO the Login screen
+              child: const Text(
+                "Log In",
+                style: TextStyle(
+                  color: mutedText,
+                  fontSize: 14,
+                  decoration: TextDecoration.underline,
                 ),
               ),
+            ),
 
-              // --- Social Buttons ---
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 12.0,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          print('Facebook sign up tapped');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: inputBackground,
-                          minimumSize: const Size(0, 40), // h-10
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          elevation: 0,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                        ),
-                        child: const Text(
-                          'Facebook',
-                          style: TextStyle(
-                            color: white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          print('Google sign up tapped');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: inputBackground,
-                          minimumSize: const Size(0, 40), // h-10
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          elevation: 0,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                        ),
-                        child: const Text(
-                          'Google',
-                          style: TextStyle(
-                            color: white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // --- Footer Link ---
-              GestureDetector(
-                onTap: () {
-                  print('Log in tapped');
-                  // Navigator.pushNamed(context, AppRoutes.login);
-                },
-                child: const Padding(
-                  padding: EdgeInsets.only(bottom: 20, top: 20),
-                  child: Text(
-                    'Already have an account? Log in',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: inactiveText,
-                      fontSize: 14,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            const SizedBox(height: 24),
+          ],
         ),
       ),
     );

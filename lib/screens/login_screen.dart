@@ -7,193 +7,243 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Set the background to dark gray/black
-      backgroundColor: const Color(0xFF0D0D0D),
-
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
-          'Welcome',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          'Welcome Back',
+          style: TextStyle(
+            color: Color(0xFF111818),
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Manrope',
+          ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        // Ensure the back button icon is visible on the dark background
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Color(0xFF111818)),
       ),
-
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            // Use ListView for scrollability in case the keyboard is open
-            children: [
-              // Use Expanded/SingleChildScrollView to let the content fill the space and be scrollable
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 60),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 40),
 
-                      // --- Email Input ---
-                      _buildDarkTextField(
-                        hintText: 'Email',
-                        icon: Icons.email_outlined,
-                      ),
-                      const SizedBox(height: 16),
-
-                      // --- Password Input ---
-                      _buildDarkTextField(
-                        hintText: 'Password',
-                        icon: Icons.lock_outline,
-                        isPassword: true,
-                      ),
-                      const SizedBox(height: 32),
-
-                      // --- Log In Button ---
-                      SizedBox(
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: () => Navigator.pushNamed(
-                            context,
-                            AppRoutes.categories,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(
-                              0xFF00BFFF,
-                            ), // Vibrant Blue
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 0,
-                          ),
-                          child: const Text(
-                            'Log In',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-
-                      // --- Separator Text ---
-                      const Center(
-                        child: Text(
-                          'Or continue with',
-                          style: TextStyle(color: Colors.white70, fontSize: 14),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // --- Social Login Buttons ---
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildSocialButton(
-                              'Facebook',
-                              // You would typically use an image or font icon here
-                              Icons.facebook,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: _buildSocialButton(
-                              'Google',
-                              Icons.g_mobiledata, // Placeholder icon
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                // --- Header Text ---
+                const Text(
+                  "Log in to your account",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF111818),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Manrope',
                   ),
                 ),
-              ),
+                const SizedBox(height: 8),
+                const Text(
+                  "Access your services and manage your profile easily.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF111818),
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    fontFamily: 'Noto Sans',
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 40),
 
-              // --- Sign Up Link (Fixed at Bottom) ---
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: TextButton(
+                // --- Email Field ---
+                _buildLightTextField(
+                  hintText: 'Email',
+                  icon: Icons.email_outlined,
+                ),
+                const SizedBox(height: 16),
+
+                // --- Password Field ---
+                _buildLightTextField(
+                  hintText: 'Password',
+                  icon: Icons.lock_outline,
+                  isPassword: true,
+                ),
+                const SizedBox(height: 28),
+
+                // --- Log In Button ---
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, AppRoutes.categories),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF13ECEC),
+                      foregroundColor: const Color(0xFF111818),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Log In',
+                      style: TextStyle(
+                        fontFamily: 'Manrope',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // --- Or continue with ---
+                const Center(
+                  child: Text(
+                    'Or continue with',
+                    style: TextStyle(
+                      color: Color(0xFF618989),
+                      fontSize: 14,
+                      fontFamily: 'Noto Sans',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // --- Social Buttons ---
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildSocialButton(
+                        text: 'Facebook',
+                        color: const Color(0xFFF0F4F4),
+                        icon: Icons.facebook,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildSocialButton(
+                        text: 'Google',
+                        color: const Color(0xFFF0F4F4),
+                        icon: Icons.g_mobiledata,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 36),
+
+                // --- Sign Up Text ---
+                TextButton(
                   onPressed: () =>
                       Navigator.pushNamed(context, AppRoutes.signup),
                   child: const Text.rich(
                     TextSpan(
                       text: "Don't have an account? ",
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
+                      style: TextStyle(
+                        color: Color(0xFF111818),
+                        fontSize: 15,
+                        fontFamily: 'Noto Sans',
+                      ),
                       children: [
                         TextSpan(
                           text: 'Sign up',
                           style: TextStyle(
-                            color: Color(0xFF00BFFF), // Vibrant Blue
+                            color: Color(0xFF13ECEC),
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'Manrope',
                           ),
                         ),
                       ],
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+
+                // --- Terms Text ---
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    "By continuing, you agree to our Terms of Service and Privacy Policy.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF618989),
+                      fontSize: 13,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Noto Sans',
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  // Helper widget for the custom dark input fields
-  Widget _buildDarkTextField({
+  // --- Light theme text field ---
+  Widget _buildLightTextField({
     required String hintText,
     required IconData icon,
     bool isPassword = false,
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C1C), // Darker gray for the input background
-        borderRadius: BorderRadius.circular(12),
+        color: const Color(0xFFF0F4F4),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: TextFormField(
         obscureText: isPassword,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(
+          color: Color(0xFF111818),
+          fontFamily: 'Noto Sans',
+        ),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(color: Colors.grey),
-          border: InputBorder.none, // Remove default border
+          hintStyle: const TextStyle(
+            color: Color(0xFF618989),
+            fontFamily: 'Noto Sans',
+          ),
+          border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
-            vertical: 18,
+            vertical: 16,
           ),
           prefixIcon: Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-            child: Icon(icon, color: Colors.grey),
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Icon(icon, color: Color(0xFF618989)),
           ),
         ),
       ),
     );
   }
 
-  // Helper widget for the social login buttons
-  Widget _buildSocialButton(String text, IconData icon) {
+  // --- Light theme social button ---
+  Widget _buildSocialButton({
+    required String text,
+    required IconData icon,
+    required Color color,
+  }) {
     return SizedBox(
-      height: 56,
+      height: 50,
       child: ElevatedButton.icon(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(
-            0xFF1C1C1C,
-          ), // Dark background for social buttons
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          backgroundColor: color,
+          foregroundColor: const Color(0xFF111818),
           elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        icon: Icon(icon, color: Colors.white),
+        icon: Icon(icon),
         label: Text(
           text,
-          style: const TextStyle(color: Colors.white, fontSize: 16),
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Manrope',
+          ),
         ),
       ),
     );
